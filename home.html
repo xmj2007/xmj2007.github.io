@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>正在跳转...</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .loading {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top-color: #ffd700;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        h1 { font-size: 20px; margin-bottom: 10px; }
+        p { font-size: 14px; opacity: 0.9; margin-bottom: 20px; }
+        .manual-link {
+            color: #ffd700;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 12px 24px;
+            border: 2px solid #ffd700;
+            border-radius: 25px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+    </style>
+    <meta http-equiv="refresh" content="1;url=https://xmj.xo.je/">
+</head>
+<body>
+    <div class="loading"></div>
+    <h1>正在前往小摩羯高考志愿平台...</h1>
+    <p>如果没有自动跳转，请点击下方按钮</p>
+    <a href="https://xmj.xo.je/" class="manual-link">立即进入</a>
+    
+    <script>
+        // 立即跳转
+        window.location.href = 'https://xmj.xo.je/';
+    </script>
+</body>
+</html>
