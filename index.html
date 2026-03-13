@@ -19,11 +19,11 @@
             padding: 20px;
         }
         .container {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.15);
             backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 40px 30px;
-            max-width: 340px;
+            max-width: 360px;
             width: 100%;
             border: 1px solid rgba(255,255,255,0.2);
         }
@@ -31,98 +31,126 @@
             font-size: 60px;
             margin-bottom: 20px;
         }
-        h1 { font-size: 22px; margin-bottom: 15px; font-weight: 600; }
-        p { font-size: 15px; line-height: 1.6; margin-bottom: 25px; opacity: 0.9; }
-        .arrow {
-            font-size: 30px;
-            margin: 20px 0;
-            animation: bounce 1.5s infinite;
-        }
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        .browser-icons {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-top: 20px;
-        }
-        .browser-icon {
-            width: 50px;
-            height: 50px;
+        h1 { font-size: 24px; margin-bottom: 10px; font-weight: 600; }
+        .subtitle { font-size: 14px; opacity: 0.9; margin-bottom: 30px; }
+        .warning-box {
             background: rgba(255,255,255,0.2);
             border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 4px solid #ffd700;
         }
-        .auto-jump {
-            margin-top: 30px;
-            padding: 15px 25px;
-            background: rgba(255,255,255,0.2);
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 25px;
+        .warning-box p {
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 0;
+        }
+        .btn-primary {
+            display: block;
+            width: 100%;
+            padding: 16px 24px;
+            background: #ffd700;
+            color: #333;
+            text-decoration: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-primary:hover {
+            background: #ffed4e;
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            display: block;
+            width: 100%;
+            padding: 14px 24px;
+            background: transparent;
             color: white;
             text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            border: 2px solid rgba(255,255,255,0.3);
             transition: all 0.3s;
         }
-        .auto-jump:hover {
-            background: rgba(255,255,255,0.3);
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .tips {
+            margin-top: 25px;
+            font-size: 13px;
+            opacity: 0.8;
+            line-height: 1.5;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="icon">🎓</div>
-        <h1>小摩羯高考志愿数据平台</h1>
-        <p>数据已更新至 2026 年最新批次<br>支持全国各省份查询</p>
+        <h1>小摩羯高考志愿</h1>
+        <p class="subtitle">2026年最新高考数据平台</p>
         
-        <div class="arrow">👆</div>
-        <p style="font-size: 14px; font-weight: 500;">
-            点击右上角 <span style="background: rgba(255,255,255,0.3); padding: 2px 8px; border-radius: 4px;">···</span><br>
-            选择"在浏览器中打开"
-        </p>
-        
-        <div class="browser-icons">
-            <div class="browser-icon">🌐</div>
-            <div class="browser-icon">📱</div>
+        <div class="warning-box">
+            <p>⚠️ 微信提示"非官方网站"是正常现象，因为我们的域名使用了海外后缀（.je），请放心访问。</p>
         </div>
-        
-        <!-- 尝试自动跳转 -->
-        <a href="https://xmj.xo.je/" class="auto-jump" id="jumpLink" onclick="handleClick(event)">
-            或点击这里尝试自动打开
+
+        <!-- 方案1：直接点击跳转（可能仍被拦截） -->
+        <a href="https://xmj.xo.je/" class="btn-primary" onclick="return handleClick(event)">
+            👉 点击进入网站
         </a>
+
+        <!-- 方案2：复制链接到浏览器打开（最可靠） -->
+        <button class="btn-secondary" onclick="copyLink()">
+            📋 复制链接到浏览器打开
+        </button>
+
+        <div class="tips">
+            如果上方按钮无效，请点击"复制链接"<br>
+            然后打开手机浏览器粘贴访问
+        </div>
     </div>
 
     <script>
+        function handleClick(e) {
+            // 尝试跳转，如果被拦截就提示复制
+            setTimeout(function() {
+                alert('如果页面未打开，请点击"复制链接到浏览器打开"');
+            }, 500);
+            return true;
+        }
+
+        function copyLink() {
+            const url = 'https://xmj.xo.je/';
+            
+            // 复制到剪贴板
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(url).then(function() {
+                    alert('链接已复制！\n请打开手机浏览器，粘贴地址栏访问');
+                });
+            } else {
+                // 兼容旧版浏览器
+                const input = document.createElement('input');
+                input.value = url;
+                document.body.appendChild(input);
+                input.select();
+                document.execCommand('copy');
+                document.body.removeChild(input);
+                alert('链接已复制！\n请打开手机浏览器，粘贴地址栏访问');
+            }
+        }
+
         // 检测是否在<-i- style="color: #6b7280; font-style: italic;">微信</->内
         function isWeixin() {
             return /MicroMessenger/i.test(navigator.userAgent);
         }
-        
-        // 尝试使用 scheme 跳转（部分安卓有效）
-        function handleClick(e) {
-            if (isWeixin()) {
-                e.preventDefault();
-                // 尝试通过 location 跳转（有时能绕过拦截）
-                window.location.href = 'https://xmj.xo.je/';
-                
-                // 备用：延时后提示
-                setTimeout(() => {
-                    alert('如果页面未打开，请点击右上角"···"选择在浏览器中打开');
-                }, 500);
-            }
-        }
-        
-        // 页面加载后自动尝试跳转（iOS 通常会被拦截，安卓部分有效）
+
+        // 非<-i- style="color: #6b7280; font-style: italic;">微信</->环境自动跳转
         window.onload = function() {
             if (!isWeixin()) {
-                // 不在<-i- style="color: #6b7280; font-style: italic;">微信</->内，直接跳转
-                window.location.replace('https://xmj.xo.je/');
+                window.location.href = 'https://xmj.xo.je/';
             }
         };
     </script>
