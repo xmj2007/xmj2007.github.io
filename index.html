@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小摩羯高考志愿数据平台</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px 30px;
+            max-width: 340px;
+            width: 100%;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+        h1 { font-size: 22px; margin-bottom: 15px; font-weight: 600; }
+        p { font-size: 15px; line-height: 1.6; margin-bottom: 25px; opacity: 0.9; }
+        .arrow {
+            font-size: 30px;
+            margin: 20px 0;
+            animation: bounce 1.5s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .browser-icons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .browser-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        .auto-jump {
+            margin-top: 30px;
+            padding: 15px 25px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 25px;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        .auto-jump:hover {
+            background: rgba(255,255,255,0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">🎓</div>
+        <h1>小摩羯高考志愿数据平台</h1>
+        <p>数据已更新至 2026 年最新批次<br>支持全国各省份查询</p>
+        
+        <div class="arrow">👆</div>
+        <p style="font-size: 14px; font-weight: 500;">
+            点击右上角 <span style="background: rgba(255,255,255,0.3); padding: 2px 8px; border-radius: 4px;">···</span><br>
+            选择"在浏览器中打开"
+        </p>
+        
+        <div class="browser-icons">
+            <div class="browser-icon">🌐</div>
+            <div class="browser-icon">📱</div>
+        </div>
+        
+        <!-- 尝试自动跳转 -->
+        <a href="https://xmj.xo.je/" class="auto-jump" id="jumpLink" onclick="handleClick(event)">
+            或点击这里尝试自动打开
+        </a>
+    </div>
+
+    <script>
+        // 检测是否在<-i- style="color: #6b7280; font-style: italic;">微信</->内
+        function isWeixin() {
+            return /MicroMessenger/i.test(navigator.userAgent);
+        }
+        
+        // 尝试使用 scheme 跳转（部分安卓有效）
+        function handleClick(e) {
+            if (isWeixin()) {
+                e.preventDefault();
+                // 尝试通过 location 跳转（有时能绕过拦截）
+                window.location.href = 'https://xmj.xo.je/';
+                
+                // 备用：延时后提示
+                setTimeout(() => {
+                    alert('如果页面未打开，请点击右上角"···"选择在浏览器中打开');
+                }, 500);
+            }
+        }
+        
+        // 页面加载后自动尝试跳转（iOS 通常会被拦截，安卓部分有效）
+        window.onload = function() {
+            if (!isWeixin()) {
+                // 不在<-i- style="color: #6b7280; font-style: italic;">微信</->内，直接跳转
+                window.location.replace('https://xmj.xo.je/');
+            }
+        };
+    </script>
+</body>
+</html>
