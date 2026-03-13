@@ -1,386 +1,450 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>高考倒计时 - 小摩羯加油</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
-        }
-        
-        /* 动态背景粒子 */
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            overflow: hidden;
-            z-index: 0;
-        }
-        
-        .particle {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            animation: float 15s infinite;
-        }
-        
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(100vh) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100vh) rotate(720deg);
-                opacity: 0;
-            }
-        }
-        
-        /* 主容器 */
-        .container {
-            position: relative;
-            z-index: 1;
-            padding: 20px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        /* 标题区域 */
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .title {
-            color: #fff;
-            font-size: 28px;
-            font-weight: 800;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            margin-bottom: 10px;
-            letter-spacing: 2px;
-        }
-        
-        .subtitle {
-            color: rgba(255,255,255,0.9);
-            font-size: 16px;
-            font-weight: 500;
-        }
-        
-        /* 倒计时卡片 */
-        .countdown-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 24px;
-            padding: 35px 30px;
-            width: 100%;
-            max-width: 340px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            text-align: center;
-            margin-bottom: 25px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .countdown-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: linear-gradient(90deg, #f093fb 0%, #f5576c 50%, #ffd700 100%);
-        }
-        
-        .countdown-label {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 15px;
-            font-weight: 500;
-        }
-        
-        .countdown-number {
-            font-size: 72px;
-            font-weight: 900;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            line-height: 1;
-            margin-bottom: 5px;
-            font-family: 'Arial Black', sans-serif;
-        }
-        
-        .countdown-unit {
-            color: #999;
-            font-size: 16px;
-            font-weight: 600;
-        }
-        
-        /* 加油语录 */
-        .quote-box {
-            background: linear-gradient(135deg, rgba(255,215,0,0.9) 0%, rgba(255,165,0,0.9) 100%);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 25px;
-            max-width: 340px;
-            width: 100%;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        
-        .quote-text {
-            color: #333;
-            font-size: 18px;
-            font-weight: 700;
-            text-align: center;
-            line-height: 1.6;
-        }
-        
-        .quote-author {
-            color: #666;
-            font-size: 13px;
-            text-align: right;
-            margin-top: 10px;
-        }
-        
-        /* 操作指引 */
-        .guide-section {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 25px;
-            max-width: 340px;
-            width: 100%;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-        
-        .guide-title {
-            color: #fff;
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        
-        .guide-steps {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .step {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            color: #fff;
-            font-size: 15px;
-        }
-        
-        .step-number {
-            width: 32px;
-            height: 32px;
-            background: rgba(255,215,0,0.9);
-            color: #333;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 14px;
-            flex-shrink: 0;
-        }
-        
-        .step-text {
-            line-height: 1.5;
-        }
-        
-        .highlight {
-            color: #ffd700;
-            font-weight: 700;
-        }
-        
-        /* 箭头动画 */
-        .arrow-animation {
-            text-align: center;
-            margin: 15px 0;
-            font-size: 28px;
-            animation: bounce 1.5s infinite;
-            color: #ffd700;
-        }
-        
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        /* 底部按钮（假链接） */
-        .action-area {
-            margin-top: 25px;
-            text-align: center;
-        }
-        
-        .fake-link {
-            display: inline-block;
-            background: rgba(255,255,255,0.2);
-            color: rgba(255,255,255,0.6);
-            padding: 12px 30px;
-            border-radius: 25px;
-            font-size: 14px;
-            text-decoration: none;
-            border: 2px dashed rgba(255,255,255,0.3);
-            pointer-events: none;
-        }
-        
-        /* 装饰元素 */
-        .deco-stars {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            font-size: 24px;
-            animation: twinkle 2s infinite;
-            z-index: 2;
-        }
-        
-        .deco-stars:nth-child(2) {
-            top: 80px;
-            left: 20px;
-            animation-delay: 0.5s;
-        }
-        
-        @keyframes twinkle {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(0.8); }
-        }
-        
-        /* 响应式 */
-        @media (max-height: 700px) {
-            .countdown-number { font-size: 60px; }
-            .title { font-size: 24px; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a12">
+<title>小摩羯 · 高考冲刺</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@700;900&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --fire: #ff6b35;
+    --gold: #ffd166;
+    --ember: #ef233c;
+    --deep: #0a0a12;
+    --card: #12121f;
+    --surface: #1a1a2e;
+    --border: rgba(255,255,255,0.07);
+    --text: #f0f0f5;
+    --muted: rgba(240,240,245,0.5);
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--deep);
+    color: var(--text);
+    font-family: 'Noto Sans SC', sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .bg-canvas {
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,107,53,0.18) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 40% at 80% 80%, rgba(239,35,60,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 10% 60%, rgba(255,209,102,0.07) 0%, transparent 60%),
+      var(--deep);
+  }
+
+  .sparks { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+  .spark {
+    position: absolute;
+    border-radius: 50%;
+    animation: drift linear infinite;
+    opacity: 0;
+  }
+  @keyframes drift {
+    0%   { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 0.6; }
+    100% { transform: translateY(-20px) rotate(720deg); opacity: 0; }
+  }
+
+  .page {
+    position: relative; z-index: 1;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 48px 24px 64px;
+    gap: 0;
+  }
+
+  /* Logo */
+  .logo-area {
+    text-align: center;
+    margin-bottom: 32px;
+    animation: fadeUp 0.7s ease both;
+  }
+  .logo-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,107,53,0.12);
+    border: 1px solid rgba(255,107,53,0.3);
+    border-radius: 999px;
+    padding: 6px 18px;
+    font-size: 13px; font-weight: 500;
+    color: var(--fire);
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+  }
+  .logo-badge .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--fire);
+    animation: pulse 1.5s ease infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.7); }
+  }
+  .site-name {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 44px; font-weight: 900;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #fff 0%, var(--gold) 50%, var(--fire) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -1px;
+  }
+  .site-tagline {
+    margin-top: 8px;
+    font-size: 14px; color: var(--muted);
+    letter-spacing: 1.5px;
+  }
+
+  /* 倒计时主卡 */
+  .countdown-card {
+    width: 100%; max-width: 380px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    padding: 36px 28px 32px;
+    text-align: center;
+    position: relative; overflow: hidden;
+    margin-bottom: 14px;
+    animation: fadeUp 0.7s 0.15s ease both;
+  }
+  .countdown-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--fire), var(--gold), var(--fire), transparent);
+    animation: shimmer 3s ease infinite;
+  }
+  @keyframes shimmer {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+  .countdown-card::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(255,107,53,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .card-label {
+    font-size: 12px; font-weight: 500;
+    color: var(--muted); letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .card-label::before, .card-label::after {
+    content: ''; flex: 1; max-width: 36px;
+    height: 1px; background: var(--border);
+  }
+
+  .days-display {
+    display: flex; align-items: flex-end; justify-content: center;
+    gap: 6px; margin-bottom: 8px;
+  }
+  .days-number {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 96px; font-weight: 900; line-height: 1;
+    background: linear-gradient(180deg, #fff 0%, var(--gold) 55%, var(--fire) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 30px rgba(255,107,53,0.4));
+    letter-spacing: -4px;
+  }
+  .days-unit {
+    font-size: 24px; font-weight: 700; color: var(--muted);
+    padding-bottom: 16px;
+  }
+
+  .countdown-sub {
+    font-size: 12px; color: var(--muted);
+    margin-bottom: 28px;
+    letter-spacing: 0.5px;
+  }
+
+  .progress-wrap { margin-bottom: 28px; }
+  .progress-info {
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .progress-track {
+    height: 6px; background: rgba(255,255,255,0.06);
+    border-radius: 999px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--fire), var(--gold));
+    border-radius: 999px;
+    transition: width 1.2s ease;
+    box-shadow: 0 0 12px rgba(255,107,53,0.5);
+  }
+
+  .motto {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 16px 20px;
+  }
+  .motto-text {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 15px; font-weight: 700; line-height: 1.8;
+    color: var(--text);
+  }
+  .motto-text em {
+    font-style: normal;
+    background: linear-gradient(90deg, var(--fire), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .motto-from {
+    font-size: 11px; color: var(--muted);
+    margin-top: 8px; text-align: right;
+  }
+
+  /* 时间小块 */
+  .time-blocks {
+    width: 100%; max-width: 380px;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 14px;
+    animation: fadeUp 0.7s 0.3s ease both;
+  }
+  .time-block {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 16px 10px;
+    text-align: center;
+  }
+  .time-block-num {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 28px; font-weight: 900;
+    line-height: 1;
+  }
+  .time-block-label {
+    font-size: 11px; color: var(--muted);
+    margin-top: 4px; letter-spacing: 0.5px;
+  }
+  .time-block:nth-child(1) .time-block-num { color: var(--fire); }
+  .time-block:nth-child(2) .time-block-num { color: var(--gold); }
+  .time-block:nth-child(3) .time-block-num { color: #c084fc; }
+
+  /* CTA */
+  .cta-wrap {
+    width: 100%; max-width: 380px;
+    animation: fadeUp 0.7s 0.45s ease both;
+    margin-bottom: 14px;
+  }
+  .cta-btn {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    width: 100%; padding: 19px 24px;
+    background: linear-gradient(135deg, var(--fire) 0%, #ff9f1c 100%);
+    color: #0a0a12;
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 16px; font-weight: 700;
+    border: none; border-radius: 18px;
+    text-decoration: none;
+    cursor: pointer;
+    position: relative; overflow: hidden;
+    box-shadow: 0 8px 32px rgba(255,107,53,0.35);
+    transition: transform 0.15s, box-shadow 0.15s;
+    -webkit-tap-highlight-color: transparent;
+    letter-spacing: 0.5px;
+  }
+  .cta-btn::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 60%);
+  }
+  .cta-btn:active {
+    transform: scale(0.97);
+    box-shadow: 0 4px 16px rgba(255,107,53,0.3);
+  }
+  .cta-icon { font-size: 20px; animation: bounce 2s ease infinite; }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+  }
+  .cta-arrow { margin-left: auto; font-size: 18px; transition: transform 0.2s; }
+  .cta-btn:active .cta-arrow { transform: translateX(4px); }
+
+  /* 微信提示 */
+  .wechat-tip {
+    width: 100%; max-width: 380px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 16px 20px;
+    animation: fadeUp 0.7s 0.55s ease both;
+  }
+  .wechat-tip-title {
+    font-size: 12px; color: var(--muted);
+    display: flex; align-items: center; gap: 6px;
+    margin-bottom: 12px;
+  }
+  .wechat-steps { display: flex; flex-direction: column; gap: 8px; }
+  .wechat-step {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13px; color: var(--muted);
+  }
+  .step-num {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: rgba(255,107,53,0.15);
+    border: 1px solid rgba(255,107,53,0.3);
+    color: var(--fire);
+    font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .footer-text {
+    margin-top: 28px;
+    font-size: 11px; color: rgba(240,240,245,0.2);
+    text-align: center; letter-spacing: 0.5px;
+    animation: fadeUp 0.7s 0.65s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(22px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
 </head>
 <body>
-    <!-- 动态粒子背景 -->
-    <div class="particles" id="particles"></div>
-    
-    <!-- 装饰星星 -->
-    <div class="deco-stars">✨</div>
-    <div class="deco-stars">⭐</div>
-    
-    <div class="container">
-        <!-- 标题 -->
-        <div class="header">
-            <h1 class="title">⏰ 高考倒计时</h1>
-            <p class="subtitle">每一秒都是未来的筹码</p>
-        </div>
-        
-        <!-- 倒计时卡片 -->
-        <div class="countdown-card">
-            <div class="countdown-label">距离2026年高考还有</div>
-            <div class="countdown-number" id="days">87</div>
-            <div class="countdown-unit">天</div>
-        </div>
-        
-        <!-- 加油语录 -->
-        <div class="quote-box">
-            <div class="quote-text">
-                小摩羯，你要加油啊！<br>
-                乾坤未定，你我皆是黑马！
-            </div>
-            <div class="quote-author">—— 致奋斗的你</div>
-        </div>
-        
-        <!-- 操作指引 -->
-        <div class="guide-section">
-            <div class="guide-title">
-                <span>📱</span>
-                <span>继续访问小摩羯高考志愿数据平台</span>
-            </div>
-            
-            <div class="arrow-animation">👆</div>
-            
-            <div class="guide-steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <div class="step-text">
-                        点击右上角 <span class="highlight">···</span> 三个点
-                    </div>
-                </div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <div class="step-text">
-                        选择 <span class="highlight">"在浏览器中打开"</span>
-                    </div>
-                </div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <div class="step-text">
-                        在浏览器中继续访问平台
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- 假链接占位 -->
-        <div class="action-area">
-            <span class="fake-link">🔗 链接待添加</span>
-        </div>
+
+<div class="bg-canvas"></div>
+<div class="sparks" id="sparks"></div>
+
+<div class="page">
+
+  <div class="logo-area">
+    <div class="logo-badge">
+      <span class="dot"></span>
+      2026 高考冲刺
     </div>
-    
-    <script>
-        // 生成背景粒子
-        function createParticles() {
-            const container = document.getElementById('particles');
-            for (let i = 0; i < 20; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 15 + 's';
-                particle.style.animationDuration = (10 + Math.random() * 10) + 's';
-                container.appendChild(particle);
-            }
-        }
-        
-        // 计算高考倒计时（2026年6月7日）
-        function updateCountdown() {
-            const now = new Date();
-            const examDate = new Date('2026-06-07T00:00:00');
-            const diff = examDate - now;
-            const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-            document.getElementById('days').textContent = days > 0 ? days : 0;
-        }
-        
-        // 初始化
-        createParticles();
-        updateCountdown();
-        
-        // 每秒更新倒计时
-        setInterval(updateCountdown, 60000);
-    </script>
+    <div class="site-name">小摩羯</div>
+    <div class="site-tagline">高考志愿数据平台</div>
+  </div>
+
+  <div class="countdown-card">
+    <div class="card-label">距离高考</div>
+    <div class="days-display">
+      <div class="days-number" id="days">87</div>
+      <div class="days-unit">天</div>
+    </div>
+    <div class="countdown-sub">2026年6月7日 · 每一秒都是未来的筹码</div>
+
+    <div class="progress-wrap">
+      <div class="progress-info">
+        <span>备考进度</span>
+        <span id="progress-pct">—</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div class="motto">
+      <div class="motto-text" id="motto-text">乾坤未定，你我皆是<em>黑马</em></div>
+      <div class="motto-from">—— 致奋斗的你</div>
+    </div>
+  </div>
+
+  <div class="time-blocks">
+    <div class="time-block">
+      <div class="time-block-num" id="tb-days">—</div>
+      <div class="time-block-label">天</div>
+    </div>
+    <div class="time-block">
+      <div class="time-block-num" id="tb-hours">—</div>
+      <div class="time-block-label">小时</div>
+    </div>
+    <div class="time-block">
+      <div class="time-block-num" id="tb-mins">—</div>
+      <div class="time-block-label">分钟</div>
+    </div>
+  </div>
+
+  <div class="cta-wrap">
+    <a href="home.html" class="cta-btn">
+      <span class="cta-icon">🚀</span>
+      <span>进入志愿数据平台</span>
+      <span class="cta-arrow">→</span>
+    </a>
+  </div>
+
+  <div class="wechat-tip" id="wechat-tip" style="display:none">
+    <div class="wechat-tip-title">📱 在微信中打开？按以下步骤操作</div>
+    <div class="wechat-steps">
+      <div class="wechat-step"><div class="step-num">1</div><span>点击右上角 ··· 三个点</span></div>
+      <div class="wechat-step"><div class="step-num">2</div><span>选择「在浏览器中打开」</span></div>
+      <div class="wechat-step"><div class="step-num">3</div><span>在浏览器中继续访问平台</span></div>
+    </div>
+  </div>
+
+  <div class="footer-text">© 2026 小摩羯 · 数据仅供参考</div>
+
+</div>
+
+<script>
+// 粒子
+const sparksEl = document.getElementById('sparks');
+const colors = ['#ff6b35','#ffd166','#ef233c','#c084fc','rgba(255,255,255,0.6)'];
+for(let i = 0; i < 28; i++) {
+  const s = document.createElement('div');
+  s.className = 'spark';
+  const size = Math.random() * 4 + 1.5;
+  s.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;background:${colors[Math.floor(Math.random()*colors.length)]};animation-duration:${Math.random()*12+8}s;animation-delay:${Math.random()*12}s;opacity:0;`;
+  sparksEl.appendChild(s);
+}
+
+// 倒计时
+const GAOKAO = new Date('2026-06-07T09:00:00');
+function update() {
+  const now = new Date();
+  const diff = GAOKAO - now;
+  if(diff < 0) return;
+  const d = Math.ceil(diff / 86400000);
+  const h = Math.floor((diff % 86400000) / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  document.getElementById('days').textContent = d;
+  document.getElementById('tb-days').textContent = d;
+  document.getElementById('tb-hours').textContent = String(h).padStart(2,'0');
+  document.getElementById('tb-mins').textContent = String(m).padStart(2,'0');
+  // 进度：高三9月1日至高考
+  const start = new Date('2025-09-01');
+  const pct = Math.min(100, Math.max(0, Math.round((now - start) / (GAOKAO - start) * 100)));
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-pct').textContent = pct + '%';
+}
+update();
+setInterval(update, 30000);
+
+// 格言随机
+const mottos = [
+  ['乾坤未定，你我皆是', '黑马'],
+  ['每一分努力，都在缩短与', '梦想的距离'],
+  ['你所吃的苦，终将照亮你的', '未来'],
+  ['不是努力不够，只是还没到', '开花的时刻'],
+  ['高考是人生的第一个', '重要战场'],
+];
+const m = mottos[Math.floor(Math.random() * mottos.length)];
+document.getElementById('motto-text').innerHTML = m[0] + `<em>${m[1]}</em>`;
+
+// 微信检测
+if(/MicroMessenger/i.test(navigator.userAgent)) {
+  document.getElementById('wechat-tip').style.display = 'block';
+}
+</script>
 </body>
 </html>
