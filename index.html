@@ -1,1 +1,386 @@
-你好！中午好。
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>高考倒计时 - 小摩羯加油</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* 动态背景粒子 */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: float 15s infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        
+        /* 主容器 */
+        .container {
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* 标题区域 */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .title {
+            color: #fff;
+            font-size: 28px;
+            font-weight: 800;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+        
+        .subtitle {
+            color: rgba(255,255,255,0.9);
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        /* 倒计时卡片 */
+        .countdown-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            padding: 35px 30px;
+            width: 100%;
+            max-width: 340px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            margin-bottom: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .countdown-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #f093fb 0%, #f5576c 50%, #ffd700 100%);
+        }
+        
+        .countdown-label {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        
+        .countdown-number {
+            font-size: 72px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            margin-bottom: 5px;
+            font-family: 'Arial Black', sans-serif;
+        }
+        
+        .countdown-unit {
+            color: #999;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        /* 加油语录 */
+        .quote-box {
+            background: linear-gradient(135deg, rgba(255,215,0,0.9) 0%, rgba(255,165,0,0.9) 100%);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 25px;
+            max-width: 340px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .quote-text {
+            color: #333;
+            font-size: 18px;
+            font-weight: 700;
+            text-align: center;
+            line-height: 1.6;
+        }
+        
+        .quote-author {
+            color: #666;
+            font-size: 13px;
+            text-align: right;
+            margin-top: 10px;
+        }
+        
+        /* 操作指引 */
+        .guide-section {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            max-width: 340px;
+            width: 100%;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .guide-title {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .guide-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #fff;
+            font-size: 15px;
+        }
+        
+        .step-number {
+            width: 32px;
+            height: 32px;
+            background: rgba(255,215,0,0.9);
+            color: #333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        
+        .step-text {
+            line-height: 1.5;
+        }
+        
+        .highlight {
+            color: #ffd700;
+            font-weight: 700;
+        }
+        
+        /* 箭头动画 */
+        .arrow-animation {
+            text-align: center;
+            margin: 15px 0;
+            font-size: 28px;
+            animation: bounce 1.5s infinite;
+            color: #ffd700;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* 底部按钮（假链接） */
+        .action-area {
+            margin-top: 25px;
+            text-align: center;
+        }
+        
+        .fake-link {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.6);
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 14px;
+            text-decoration: none;
+            border: 2px dashed rgba(255,255,255,0.3);
+            pointer-events: none;
+        }
+        
+        /* 装饰元素 */
+        .deco-stars {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            animation: twinkle 2s infinite;
+            z-index: 2;
+        }
+        
+        .deco-stars:nth-child(2) {
+            top: 80px;
+            left: 20px;
+            animation-delay: 0.5s;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+        
+        /* 响应式 */
+        @media (max-height: 700px) {
+            .countdown-number { font-size: 60px; }
+            .title { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 动态粒子背景 -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- 装饰星星 -->
+    <div class="deco-stars">✨</div>
+    <div class="deco-stars">⭐</div>
+    
+    <div class="container">
+        <!-- 标题 -->
+        <div class="header">
+            <h1 class="title">⏰ 高考倒计时</h1>
+            <p class="subtitle">每一秒都是未来的筹码</p>
+        </div>
+        
+        <!-- 倒计时卡片 -->
+        <div class="countdown-card">
+            <div class="countdown-label">距离2026年高考还有</div>
+            <div class="countdown-number" id="days">87</div>
+            <div class="countdown-unit">天</div>
+        </div>
+        
+        <!-- 加油语录 -->
+        <div class="quote-box">
+            <div class="quote-text">
+                小摩羯，你要加油啊！<br>
+                乾坤未定，你我皆是黑马！
+            </div>
+            <div class="quote-author">—— 致奋斗的你</div>
+        </div>
+        
+        <!-- 操作指引 -->
+        <div class="guide-section">
+            <div class="guide-title">
+                <span>📱</span>
+                <span>继续访问小摩羯高考志愿数据平台</span>
+            </div>
+            
+            <div class="arrow-animation">👆</div>
+            
+            <div class="guide-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-text">
+                        点击右上角 <span class="highlight">···</span> 三个点
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-text">
+                        选择 <span class="highlight">"在浏览器中打开"</span>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-text">
+                        在浏览器中继续访问平台
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 假链接占位 -->
+        <div class="action-area">
+            <span class="fake-link">🔗 链接待添加</span>
+        </div>
+    </div>
+    
+    <script>
+        // 生成背景粒子
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+        
+        // 计算高考倒计时（2026年6月7日）
+        function updateCountdown() {
+            const now = new Date();
+            const examDate = new Date('2026-06-07T00:00:00');
+            const diff = examDate - now;
+            const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+            document.getElementById('days').textContent = days > 0 ? days : 0;
+        }
+        
+        // 初始化
+        createParticles();
+        updateCountdown();
+        
+        // 每秒更新倒计时
+        setInterval(updateCountdown, 60000);
+    </script>
+</body>
+</html>
